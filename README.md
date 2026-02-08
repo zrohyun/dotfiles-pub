@@ -10,8 +10,34 @@ source ~/.bashrc
 dpri
 ```
 
-## Scope
+## What install.sh does
 
-- Linux only
-- Public repo contains only bootstrap assets (`install.sh`, `bashrc.template`)
-- Private full install runs from `zrohyun/dotfiles`
+- Works on Linux only (exits on non-Linux)
+- Backs up `~/.bashrc`
+- Installs a managed bootstrap block (`DOTFILES_PUB_START/END`) idempotently
+- Adds `dotfiles_private_install` and alias `dpri`
+- Default private target repo: `zrohyun/dotfiles`
+
+## Runtime variables (optional overrides)
+
+- `DOTFILES_PRIVATE_REPO` (default: `zrohyun/dotfiles`)
+- `DOTFILES_PRIVATE_DIR` (default: `~/.dotfiles-private`)
+- `DOTFILES_PRIVATE_BRANCH` (default: `main`)
+- `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
+
+## Auth policy
+
+Default flow uses GitHub CLI:
+
+1. `gh` installed
+2. `gh auth login`
+3. authenticated user matches `DOTFILES_EXPECTED_GH_USER`
+
+If checks pass, `dpri` clones and runs private `install.sh`.
+
+## Fallback options (documentation only)
+
+- PAT one-time input (`read -s`) for clone
+- SSH Deploy Key (read-only) for clone
+
+These fallback methods are intentionally not auto-executed by this repo.
