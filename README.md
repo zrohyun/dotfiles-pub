@@ -21,7 +21,7 @@ dpri
 ## Runtime variables (optional overrides)
 
 - `DOTFILES_PRIVATE_REPO` (default: `zrohyun/dotfiles`)
-- `DOTFILES_PRIVATE_DIR` (default: `~/.dotfiles-private`)
+- `DOTFILES_PRIVATE_DIR` (default: `~/.dotfiles`)
 - `DOTFILES_PRIVATE_BRANCH` (default: `main`)
 - `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
 

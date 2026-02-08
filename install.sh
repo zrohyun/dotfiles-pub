@@ -63,13 +63,13 @@ tmp_block="$(mktemp)"
 
 # Private dotfiles bootstrap (defaults can be overridden before calling dpri)
 export DOTFILES_PRIVATE_REPO="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
-export DOTFILES_PRIVATE_DIR="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles-private}"
+export DOTFILES_PRIVATE_DIR="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
 export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-main}"
 export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 
 dotfiles_private_install() {
   local repo="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
-  local dir="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles-private}"
+  local dir="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
   local branch="${DOTFILES_PRIVATE_BRANCH:-main}"
   local expected_user="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
   local current_user remote_url backup_dir
@@ -127,7 +127,10 @@ dotfiles_private_install() {
   fi
 
   echo "[dotfiles-pub] running private installer..."
-  bash "$dir/install.sh"
+  (
+    cd "$dir"
+    DOTFILES_INTERNAL_SOURCE=1 bash ./install.sh
+  )
 }
 
 alias dpri='dotfiles_private_install'
