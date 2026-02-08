@@ -1,0 +1,28 @@
+# ===============================
+# dotfiles-pub bashrc template
+# ===============================
+
+# Return early for non-interactive shells.
+[[ $- != *i* ]] && return
+
+# History defaults
+HISTCONTROL=ignoreboth
+HISTSIZE=5000
+HISTFILESIZE=10000
+shopt -s histappend
+shopt -s checkwinsize
+
+# Useful defaults
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# User-local bin first
+if [[ -d "$HOME/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+if [[ -d "$HOME/.bin" ]]; then
+  export PATH="$HOME/.bin:$PATH"
+fi
