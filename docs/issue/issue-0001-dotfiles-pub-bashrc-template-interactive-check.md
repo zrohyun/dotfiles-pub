@@ -30,4 +30,4 @@ Change interactive detection in `submodules/dotfiles-pub/bashrc.template` to `$-
 
 - Closing commits:
   - `36e07cc` (implementation: `fix(dotfiles-pub): stabilize local template bootstrap for tests Refs #9`)
-  - `2e12729` (issue record)
+  - `e046588` (close record)
