@@ -30,4 +30,4 @@ The `apt_install_basic_tools` helper ran `apt` interactively and did not provide
 
 - Closing commits:
   - `c3b01a3` (implementation: `fix(install): allow noninteractive aibt tzdata Refs #2`)
-  - `__TBD__` (follow-up: preserve noninteractive env under sudo)
+  - `74d132a` (follow-up: preserve noninteractive env under sudo)
