@@ -1,0 +1,9 @@
+.git
+.github
+_hub
+docs
+logs
+
+# local/dev
+*.log
+.DS_Store

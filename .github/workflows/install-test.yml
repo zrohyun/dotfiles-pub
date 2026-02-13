@@ -1,0 +1,48 @@
+name: Install Test
+
+on:
+  push:
+    paths:
+      - 'install.sh'
+      - 'bashrc.template'
+      - '.github/workflows/install-test.yml'
+  pull_request:
+    paths:
+      - 'install.sh'
+      - 'bashrc.template'
+      - '.github/workflows/install-test.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: install-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run install.sh
+        run: |
+          mkdir -p logs/ci
+          chmod +x install.sh
+          ./install.sh 2>&1 | tee logs/ci/install.log
+
+      - name: Verify bashrc markers
+        run: |
+          grep -q "DOTFILES_PUB_START" "$HOME/.bashrc"
+          grep -q "DOTFILES_PUB_END" "$HOME/.bashrc"
+
+      - name: Upload install logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: install-logs
+          path: logs/ci/install.log
+          retention-days: 7
+          if-no-files-found: warn
+          include-hidden-files: true
