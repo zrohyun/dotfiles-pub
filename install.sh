@@ -77,6 +77,16 @@ export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 
 apt_install_basic_tools() {
   local pkgs=(vim curl git sudo)
+  local apt_env=()
+  local tz="${DOTFILES_TZ:-${TZ:-}}"
+
+  if [[ "${DOTFILES_AIBT_NONINTERACTIVE:-}" == "1" ]]; then
+    apt_env+=(DEBIAN_FRONTEND=noninteractive)
+  fi
+
+  if [[ -n "$tz" ]]; then
+    apt_env+=(TZ="$tz")
+  fi
 
   if ! command -v apt >/dev/null 2>&1; then
     echo "[dotfiles-pub] apt is not available. This function is for Ubuntu/Debian only."
@@ -84,8 +94,8 @@ apt_install_basic_tools() {
   fi
 
   if command -v sudo >/dev/null 2>&1; then
-    sudo apt update
-    sudo apt install -y "${pkgs[@]}"
+    env "${apt_env[@]}" sudo apt update
+    env "${apt_env[@]}" sudo apt install -y "${pkgs[@]}"
     return 0
   fi
 
@@ -94,8 +104,8 @@ apt_install_basic_tools() {
     return 1
   fi
 
-  apt update
-  apt install -y "${pkgs[@]}"
+  env "${apt_env[@]}" apt update
+  env "${apt_env[@]}" apt install -y "${pkgs[@]}"
 }
 
 alias aibt='apt_install_basic_tools'

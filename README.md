@@ -25,6 +25,31 @@ dpri
 - `DOTFILES_PRIVATE_BRANCH` (default: `main`)
 - `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
 
+## tzdata prompts (aibt)
+
+`aibt` can trigger tzdata questions on some Ubuntu/Debian hosts. Use one of the following to skip prompts.
+
+Method 1: One-shot install with noninteractive TZ.
+
+```bash
+sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get update
+sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get install -y vim curl git sudo
+```
+
+Method 2: Preconfigure tzdata, then run `aibt`.
+
+```bash
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+sudo dpkg-reconfigure -f noninteractive tzdata
+aibt
+```
+
+If you want `aibt` itself to run noninteractively, set the env vars below.
+
+```bash
+DOTFILES_AIBT_NONINTERACTIVE=1 DOTFILES_TZ=Asia/Seoul aibt
+```
+
 ## Auth policy
 
 Default flow uses GitHub CLI:
