@@ -28,6 +28,6 @@ Change interactive detection in `submodules/dotfiles-pub/bashrc.template` to `$-
 
 ## Traceability
 
-- Closing commit: `36e07cc`
-- Commit subject: `fix(dotfiles-pub): stabilize local template bootstrap for tests Refs #9`
-
+- Closing commits:
+  - `36e07cc` (implementation: `fix(dotfiles-pub): stabilize local template bootstrap for tests Refs #9`)
+  - `2e12729` (issue record)
