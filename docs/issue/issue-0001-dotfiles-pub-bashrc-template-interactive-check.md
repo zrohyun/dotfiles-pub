@@ -2,6 +2,8 @@
 
 - Issue number: `#1`
 - Issue type: `Bug`
+- Issue hash (GitHub node id): `I_kwDORLW9B87qvbS-`
+- Issue URL: `https://github.com/zrohyun/dotfiles-pub/issues/1`
 - Status: `Closed`
 - Root repo: `submodules/dotfiles-pub`
 - Closed at: `2026-02-13T17:36:14Z`
