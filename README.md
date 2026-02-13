@@ -1,6 +1,6 @@
 # dotfiles-pub
 
-Linux bootstrap for loading a minimal `~/.bashrc` block and then installing private dotfiles.
+A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides a helper to install private dotfiles.
 
 ## Quick Start
 
@@ -12,11 +12,11 @@ dpri
 
 ## What install.sh does
 
-- Works on Linux only (exits on non-Linux)
+- Linux only (exits on non-Linux hosts)
 - Backs up `~/.bashrc`
-- Installs a managed bootstrap block (`DOTFILES_PUB_START/END`) idempotently
-- Adds `dotfiles_private_install` and alias `dpri`
-- Default private target repo: `zrohyun/dotfiles`
+- Inserts a managed block (`DOTFILES_PUB_START/END`) idempotently
+- Adds `dotfiles_private_install` and the `dpri` alias
+- Default private repo target: `zrohyun/dotfiles`
 
 ## Runtime variables (optional overrides)
 
@@ -27,7 +27,7 @@ dpri
 
 ## tzdata prompts (aibt)
 
-`aibt` can trigger tzdata questions on some Ubuntu/Debian hosts. Use one of the following to skip prompts.
+`aibt` can trigger tzdata prompts on some Ubuntu/Debian hosts. Use one of the following to avoid interaction.
 
 Method 1: One-shot install with noninteractive TZ.
 
@@ -54,53 +54,42 @@ DOTFILES_AIBT_NONINTERACTIVE=1 DOTFILES_TZ=Asia/Seoul aibt
 
 Default flow uses GitHub CLI:
 
-1. `gh` installed
+1. Install `gh`
 2. `gh auth login`
-3. authenticated user matches `DOTFILES_EXPECTED_GH_USER`
+3. Ensure the authenticated user matches `DOTFILES_EXPECTED_GH_USER`
 
-If checks pass, `dpri` clones and runs private `install.sh`.
+If checks pass, `dpri` clones and runs the private `install.sh`.
 
 ## Fallback options (documentation only)
 
 - PAT one-time input (`read -s`) for clone
-- SSH Deploy Key (read-only) for clone
+- SSH deploy key (read-only) for clone
 
 These fallback methods are intentionally not auto-executed by this repo.
 
 ## Bash prompt configuration
 
-- `bashrc.template` now contains the prompt directly, so no external prompt theme files are required.
-- Prompt is git-aware and adds a compact status indicator for a cleaner default experience.
-- If you want to test previously explored themes, archived files are in:
-  - `_hub/_data/bak/bash_prompt/prompt-themes`
-  - `_hub/_data/bak/bash_prompt/scripts`
+- `bashrc.template` now contains the prompt directly, so no external theme files are required.
+- The prompt is git-aware and includes a compact status indicator.
+- Archived prompt experiments live under `_hub/_data/bak/bash_prompt/` (see the README there for restore steps).
 
-### Restore archived prompt experiments
+## TODO (private repo integration)
 
-If you want to try the archived themes again, copy them back from this repo backup:
+- [ ] GitHub Actions E2E test for private repo clone/install via key/token
+- [ ] Local Docker tests covering private clone success/failure paths
+- [ ] Document secret injection policy (secret names, read-only scope, rotation)
+- [ ] Test matrix separating `gh` auth and key/token auth paths
 
-```bash
-cp -R ./_hub/_data/bak/bash_prompt/prompt-themes ./prompt-themes
-cp -R ./_hub/_data/bak/bash_prompt/scripts ./scripts
-```
+## Single-repo Docker test
 
-## TODO (private 연동 테스트)
-
-- [ ] GitHub Actions에서 `key/token` 기반으로 private repo(`zrohyun/dotfiles`) clone/install E2E 검증
-- [ ] local Docker 테스트에서 `key/token` 기반 private clone 경로를 재현하고 성공/실패 케이스 점검
-- [ ] secret 주입 정책 문서화: Actions Secret 이름, 권한 범위(read-only), rotation 주기
-- [ ] `gh` 인증 경로와 `key/token` 경로를 분리한 테스트 매트릭스 구성
-
-## Docker 단일 리포지토리 테스트
-
-단일 `dotfiles-pub` 리포지토리를 clone한 상태에서 로컬에서 바로 실행해보려면 다음 스크립트를 사용합니다.
+If you want to run the installer from a single cloned `dotfiles-pub` repo:
 
 ```bash
 cd /path/to/dotfiles-pub
 ./scripts/run_dotfiles_pub_single_clone.sh
 ```
 
-필요한 경우 repo/branch를 환경변수로 바꿔서 실행할 수 있습니다.
+Override repo/branch via env vars if needed.
 
 ```bash
 DOTFILES_PUB_REPO=https://github.com/zrohyun/dotfiles-pub.git \
