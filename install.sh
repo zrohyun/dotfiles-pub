@@ -14,6 +14,7 @@ fi
 RC_FILE="${HOME}/.bashrc"
 MARKER_START="# DOTFILES_PUB_START"
 MARKER_END="# DOTFILES_PUB_END"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 PUB_RAW_BASE="${DOTFILES_PUB_RAW_URL:-https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main}"
 TEMPLATE_URL="${PUB_RAW_BASE}/bashrc.template"
@@ -36,8 +37,15 @@ $0==e {skip=0; next}
 mv "$tmp_clean" "$RC_FILE"
 
 TEMPLATE_CONTENT=""
-if command -v curl >/dev/null 2>&1; then
-  TEMPLATE_CONTENT="$(curl -fsSL "$TEMPLATE_URL" || true)"
+LOCAL_TEMPLATE_PATH="${DOTFILES_PUB_TEMPLATE_PATH:-$SCRIPT_DIR/bashrc.template}"
+
+if [[ -r "$LOCAL_TEMPLATE_PATH" ]]; then
+  echo "[dotfiles-pub] Using local template: $LOCAL_TEMPLATE_PATH"
+  TEMPLATE_CONTENT="$(cat "$LOCAL_TEMPLATE_PATH" || true)"
+else
+  if command -v curl >/dev/null 2>&1; then
+    TEMPLATE_CONTENT="$(curl -fsSL "$TEMPLATE_URL" || true)"
+  fi
 fi
 
 if [[ -z "$TEMPLATE_CONTENT" ]]; then

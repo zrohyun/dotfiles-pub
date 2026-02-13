@@ -42,6 +42,23 @@ If checks pass, `dpri` clones and runs private `install.sh`.
 
 These fallback methods are intentionally not auto-executed by this repo.
 
+## Bash prompt configuration
+
+- `bashrc.template` now contains the prompt directly, so no external prompt theme files are required.
+- Prompt is git-aware and adds a compact status indicator for a cleaner default experience.
+- If you want to test previously explored themes, archived files are in:
+  - `_hub/_data/bak/bash_prompt/prompt-themes`
+  - `_hub/_data/bak/bash_prompt/scripts`
+
+### Restore archived prompt experiments
+
+If you want to try the archived themes again, copy them back from backup:
+
+```bash
+cp -R /Users/ncai/.dotfiles/_hub/_data/bak/bash_prompt/prompt-themes /Users/ncai/.dotfiles/submodules/dotfiles-pub/
+cp -R /Users/ncai/.dotfiles/_hub/_data/bak/bash_prompt/scripts /Users/ncai/.dotfiles/submodules/dotfiles-pub/
+```
+
 ## TODO (private 연동 테스트)
 
 - [ ] GitHub Actions에서 `key/token` 기반으로 private repo(`zrohyun/dotfiles`) clone/install E2E 검증
@@ -49,40 +66,19 @@ These fallback methods are intentionally not auto-executed by this repo.
 - [ ] secret 주입 정책 문서화: Actions Secret 이름, 권한 범위(read-only), rotation 주기
 - [ ] `gh` 인증 경로와 `key/token` 경로를 분리한 테스트 매트릭스 구성
 
-## Bash prompt theme playground
+## Docker 단일 리포지토리 테스트
 
-### 조사한 오픈소스 Bash prompt
-
-- `minimal` (local)
-  - 기본 PS1 + git 브랜치/상태 표시
-- `Starship` (https://github.com/starship/starship)
-  - Rust로 만든 초경량 멀티셸 크로스-쉘 프롬프트
-- `powerline-go` (https://github.com/justjanne/powerline-go)
-  - Go로 만든 Powerline 스타일 Bash 프롬프트
-- `Liquid Prompt` (https://github.com/nojhan/liquidprompt)
-  - 배터리/업데이트/실행시간 등 컨텍스트를 보여주는 전통적인 Bash 프롬프트
-
-### Docker로 테마 미리보기
+단일 `dotfiles-pub` 리포지토리를 clone한 상태에서 로컬에서 바로 실행해보려면 다음 스크립트를 사용합니다.
 
 ```bash
-cd /Users/ncai/.dotfiles/submodules/dotfiles-pub
-./scripts/prompt_theme_demo.sh
+cd /path/to/dotfiles-pub
+./scripts/run_dotfiles_pub_single_clone.sh
 ```
 
-- 메뉴에서 `minimal`, `starship`, `powerline-go`, `liquidprompt` 선택
-- 선택 즉시 Ubuntu 컨테이너가 실행되고 `.bashrc`가 적용된 인터랙티브 쉘에 진입
-
-### 직접 테마 지정 실행
+필요한 경우 repo/branch를 환경변수로 바꿔서 실행할 수 있습니다.
 
 ```bash
-./scripts/prompt_theme_demo.sh starship
-./scripts/prompt_theme_demo.sh powerline-go
-```
-
-### 컨테이너 이미지/테마 강제 지정
-
-```bash
-export DOTFILES_PUB_DEMO_IMAGE=ubuntu:24.04
-export DOTFILES_PUB_PROMPT_THEME=starship
-./scripts/prompt_theme_demo.sh
+DOTFILES_PUB_REPO=https://github.com/zrohyun/dotfiles-pub.git \
+DOTFILES_PUB_BRANCH=main \
+./scripts/run_dotfiles_pub_single_clone.sh
 ```
