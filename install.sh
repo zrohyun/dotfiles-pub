@@ -67,6 +67,31 @@ export DOTFILES_PRIVATE_DIR="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
 export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-main}"
 export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 
+apt_install_basic_tools() {
+  local pkgs=(vim curl git sudo)
+
+  if ! command -v apt >/dev/null 2>&1; then
+    echo "[dotfiles-pub] apt is not available. This function is for Ubuntu/Debian only."
+    return 1
+  fi
+
+  if command -v sudo >/dev/null 2>&1; then
+    sudo apt update
+    sudo apt install -y "${pkgs[@]}"
+    return 0
+  fi
+
+  if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
+    echo "[dotfiles-pub] sudo is required to run aibt on non-root users."
+    return 1
+  fi
+
+  apt update
+  apt install -y "${pkgs[@]}"
+}
+
+alias aibt='apt_install_basic_tools'
+
 dotfiles_private_install() {
   local repo="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
   local dir="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
@@ -79,8 +104,9 @@ dotfiles_private_install() {
     if ! command -v sudo >/dev/null 2>&1; then
       echo "  sudo is not installed. Install sudo first."
     else
-      echo "  Ubuntu/Debian: sudo apt update && sudo apt install -y gh"
+      echo "  Ubuntu/Debian: aibt && sudo apt install -y gh"
     fi
+    echo "  Or run: aibt to install vim curl git sudo"
     echo "  Then run: gh auth login"
     return 1
   fi
