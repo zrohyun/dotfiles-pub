@@ -76,7 +76,11 @@ dotfiles_private_install() {
 
   if ! command -v gh >/dev/null 2>&1; then
     echo "[dotfiles-pub] gh CLI is required."
-    echo "  Ubuntu/Debian: sudo apt install gh"
+    if ! command -v sudo >/dev/null 2>&1; then
+      echo "  sudo is not installed. Install sudo first."
+    else
+      echo "  Ubuntu/Debian: sudo apt update && sudo apt install -y gh"
+    fi
     echo "  Then run: gh auth login"
     return 1
   fi
