@@ -177,4 +177,5 @@ cat "$tmp_block" >> "$RC_FILE"
 rm -f "$tmp_block"
 
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
+echo "[dotfiles-pub] Tip: run 'aibt' in shell to install basic tools (vim/curl/git/sudo)"
 echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
