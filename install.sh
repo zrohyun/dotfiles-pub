@@ -93,19 +93,20 @@ apt_install_basic_tools() {
     return 1
   fi
 
-  if command -v sudo >/dev/null 2>&1; then
-    env "${apt_env[@]}" sudo apt update
-    env "${apt_env[@]}" sudo apt install -y "${pkgs[@]}"
+  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    env "${apt_env[@]}" apt update
+    env "${apt_env[@]}" apt install -y "${pkgs[@]}"
     return 0
   fi
 
-  if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
-    echo "[dotfiles-pub] sudo is required to run aibt on non-root users."
-    return 1
+  if command -v sudo >/dev/null 2>&1; then
+    sudo env "${apt_env[@]}" apt update
+    sudo env "${apt_env[@]}" apt install -y "${pkgs[@]}"
+    return 0
   fi
 
-  env "${apt_env[@]}" apt update
-  env "${apt_env[@]}" apt install -y "${pkgs[@]}"
+  echo "[dotfiles-pub] sudo is required to run aibt on non-root users."
+  return 1
 }
 
 alias aibt='apt_install_basic_tools'

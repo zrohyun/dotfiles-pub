@@ -20,6 +20,7 @@ The `apt_install_basic_tools` helper ran `apt` interactively and did not provide
 
 - Added optional noninteractive and TZ environment handling to `apt_install_basic_tools` in `submodules/dotfiles-pub/install.sh`.
 - Documented two noninteractive approaches and the new env vars in `submodules/dotfiles-pub/README.md`.
+- Ensured `sudo` preserves `DEBIAN_FRONTEND`/`TZ` by applying env vars after `sudo` and skipping `sudo` when already root.
 
 ## Validation
 
@@ -29,3 +30,4 @@ The `apt_install_basic_tools` helper ran `apt` interactively and did not provide
 
 - Closing commits:
   - `c3b01a3` (implementation: `fix(install): allow noninteractive aibt tzdata Refs #2`)
+  - `__TBD__` (follow-up: preserve noninteractive env under sudo)
