@@ -7,7 +7,7 @@ A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh | bash
 source ~/.bashrc
-dpri
+drip
 ```
 
 ## What install.sh does
@@ -15,7 +15,7 @@ dpri
 - Linux only (exits on non-Linux hosts)
 - Backs up `~/.bashrc`
 - Inserts a managed block (`DOTFILES_PUB_START/END`) idempotently
-- Adds `dotfiles_private_install` and the `dpri` alias
+- Adds `dotfiles_private_install` and the `drip` alias
 - Default private repo target: `zrohyun/dotfiles`
 
 ## Runtime variables (optional overrides)
@@ -58,7 +58,7 @@ Default flow uses GitHub CLI:
 2. `gh auth login`
 3. Ensure the authenticated user matches `DOTFILES_EXPECTED_GH_USER`
 
-If checks pass, `dpri` clones and runs the private `install.sh`.
+If checks pass, `drip` clones and runs the private `install.sh`.
 
 ## Fallback options (documentation only)
 

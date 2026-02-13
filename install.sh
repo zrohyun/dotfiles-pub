@@ -183,6 +183,7 @@ dotfiles_private_install() {
 }
 
 alias dpri='dotfiles_private_install'
+alias drip='dotfiles_private_install' # dotfiles-remote-install-private
 
 # Fallback auth options (documentation only):
 # 1) PAT one-time input: read -sr GITHUB_TOKEN; use it only for clone, then unset.
@@ -197,4 +198,5 @@ rm -f "$tmp_block"
 
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
 echo "[dotfiles-pub] Tip: run 'aibt' in shell to install basic tools (vim/curl/git/sudo)"
-echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
+# echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
+echo "[dotfiles-pub] Next: source ~/.bashrc && drip"

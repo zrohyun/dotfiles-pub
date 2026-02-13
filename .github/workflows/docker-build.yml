@@ -72,6 +72,12 @@ jobs:
               TAGS+=(--tag "$tag")
             fi
           done <<< "${{ steps.meta.outputs.tags }}"
+          # To remove the `unknown/unknown` artifact in GHCR, disable provenance/SBOM.
+          # This prevents attestation metadata from being published.
+          # Example (use one or both):
+          #   --provenance=false
+          #   --sbom=false
+          # See: https://docs.docker.com/build/attestations/
           docker buildx build \
             --progress=plain \
             --platform linux/amd64,linux/arm64 \
