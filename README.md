@@ -1,5 +1,8 @@
 # dotfiles-pub
 
+[![Build and Push Docker Image](https://github.com/zrohyun/dotfiles-pub/actions/workflows/docker-build.yml/badge.svg)](https://github.com/zrohyun/dotfiles-pub/actions/workflows/docker-build.yml)
+[![Install Test](https://github.com/zrohyun/dotfiles-pub/actions/workflows/install-test.yml/badge.svg)](https://github.com/zrohyun/dotfiles-pub/actions/workflows/install-test.yml)
+
 A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides a helper to install private dotfiles.
 
 ## Quick Start
