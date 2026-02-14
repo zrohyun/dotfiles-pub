@@ -108,10 +108,12 @@ echo "[INFO] workspace: $WORKDIR"
 
 # Case 1) gh binary missing
 home_no_gh="$(prepare_home "no-gh")" || fail "no-gh: failed to prepare HOME"
+bin_no_gh="$WORKDIR/no-gh/bin"
+mkdir -p "$bin_no_gh"
 run_expect_fail_contains \
   "no-gh" \
   "$home_no_gh" \
-  "/usr/sbin:/sbin:/bin" \
+  "$bin_no_gh" \
   "[dotfiles-pub] gh CLI is required."
 
 # Case 2) gh exists but unauthenticated
