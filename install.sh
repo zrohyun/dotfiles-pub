@@ -88,20 +88,20 @@ apt_install_basic_tools() {
     apt_env+=(TZ="$tz")
   fi
 
-  if ! command -v apt >/dev/null 2>&1; then
-    echo "[dotfiles-pub] apt is not available. This function is for Ubuntu/Debian only."
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
     return 1
   fi
 
   if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
-    env "${apt_env[@]}" apt update
-    env "${apt_env[@]}" apt install -y "${pkgs[@]}"
+    env "${apt_env[@]}" apt-get update
+    env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
     return 0
   fi
 
   if command -v sudo >/dev/null 2>&1; then
-    sudo env "${apt_env[@]}" apt update
-    sudo env "${apt_env[@]}" apt install -y "${pkgs[@]}"
+    sudo env "${apt_env[@]}" apt-get update
+    sudo env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
     return 0
   fi
 
@@ -123,7 +123,7 @@ dotfiles_private_install() {
     if ! command -v sudo >/dev/null 2>&1; then
       echo "  sudo is not installed. Install sudo first."
     else
-      echo "  Ubuntu/Debian: aibt && sudo apt install -y gh"
+      echo "  Ubuntu/Debian: aibt && sudo apt-get install -y gh"
     fi
     echo "  Or run: aibt to install vim curl git sudo"
     echo "  Then run: gh auth login"

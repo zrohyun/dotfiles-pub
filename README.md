@@ -28,6 +28,10 @@ drip
 - `DOTFILES_PRIVATE_BRANCH` (default: `main`)
 - `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
 
+## Install policy (simplified)
+
+For simplicity, this repo does not pin `install.sh` to a commit SHA or verify its hash by default. It always fetches the latest `main` version.
+
 ## tzdata prompts (aibt)
 
 `aibt` can trigger tzdata prompts on some Ubuntu/Debian hosts. Use one of the following to avoid interaction.
