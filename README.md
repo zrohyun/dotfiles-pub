@@ -8,8 +8,12 @@ A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides
 ## Quick Start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh | bash
+cd submodules/dotfiles-pub
+./install.sh
 source ~/.bashrc
+aboot
+aigh
+gh auth login
 drip
 ```
 
@@ -32,9 +36,9 @@ drip
 
 For simplicity, this repo does not pin `install.sh` to a commit SHA or verify its hash by default. It always fetches the latest `main` version.
 
-## tzdata prompts (aibt)
+## tzdata prompts (aboot)
 
-`aibt` can trigger tzdata prompts on some Ubuntu/Debian hosts. Use one of the following to avoid interaction.
+`aboot` can trigger tzdata prompts on some Ubuntu/Debian hosts. Use one of the following to avoid interaction.
 
 Method 1: One-shot install with noninteractive TZ.
 
@@ -43,18 +47,24 @@ sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get update
 sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get install -y vim curl git sudo
 ```
 
-Method 2: Preconfigure tzdata, then run `aibt`.
+Method 2: Preconfigure tzdata, then run `aboot`.
 
 ```bash
 sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 sudo dpkg-reconfigure -f noninteractive tzdata
-aibt
+aboot
 ```
 
-If you want `aibt` itself to run noninteractively, set the env vars below.
+If you want `aboot` itself to run noninteractively, set the env vars below.
 
 ```bash
-DOTFILES_AIBT_NONINTERACTIVE=1 DOTFILES_TZ=Asia/Seoul aibt
+DOTFILES_AIBT_NONINTERACTIVE=1 DOTFILES_TZ=Asia/Seoul aboot
+```
+
+## gh install (aigh)
+
+```bash
+aigh
 ```
 
 ## Auth policy

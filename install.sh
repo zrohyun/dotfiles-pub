@@ -105,11 +105,46 @@ apt_install_basic_tools() {
     return 0
   fi
 
-  echo "[dotfiles-pub] sudo is required to run aibt on non-root users."
+  echo "[dotfiles-pub] sudo is required to run aboot on non-root users."
   return 1
 }
 
-alias aibt='apt_install_basic_tools'
+apt_install_gh() {
+  local pkgs=(gh)
+  local apt_env=()
+  local tz="${DOTFILES_TZ:-${TZ:-}}"
+
+  if [[ "${DOTFILES_AIBT_NONINTERACTIVE:-}" == "1" ]]; then
+    apt_env+=(DEBIAN_FRONTEND=noninteractive)
+  fi
+
+  if [[ -n "$tz" ]]; then
+    apt_env+=(TZ="$tz")
+  fi
+
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
+    return 1
+  fi
+
+  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    env "${apt_env[@]}" apt-get update
+    env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
+    return 0
+  fi
+
+  if command -v sudo >/dev/null 2>&1; then
+    sudo env "${apt_env[@]}" apt-get update
+    sudo env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
+    return 0
+  fi
+
+  echo "[dotfiles-pub] sudo is required to run aigh on non-root users."
+  return 1
+}
+
+alias aboot='apt_install_basic_tools'
+alias aigh='apt_install_gh'
 
 dotfiles_private_install() {
   local repo="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
@@ -123,10 +158,10 @@ dotfiles_private_install() {
     if ! command -v sudo >/dev/null 2>&1; then
       echo "  sudo is not installed. Install sudo first."
     else
-      echo "  Ubuntu/Debian: aibt && sudo apt-get install -y gh"
+      echo "  Ubuntu/Debian: aboot && aigh"
     fi
-    echo "  Or run: aibt to install vim curl git sudo"
-    echo "  Then run: gh auth login"
+    echo "  Or run: aboot to install vim curl git sudo"
+    echo "  Then run: aigh and gh auth login"
     return 1
   fi
 
@@ -197,6 +232,7 @@ cat "$tmp_block" >> "$RC_FILE"
 rm -f "$tmp_block"
 
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
-echo "[dotfiles-pub] Tip: run 'aibt' in shell to install basic tools (vim/curl/git/sudo)"
+echo "[dotfiles-pub] Tip: run 'aboot' in shell to install basic tools (vim/curl/git/sudo)"
+echo "[dotfiles-pub] Tip: run 'aigh' in shell to install gh CLI"
 # echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
 echo "[dotfiles-pub] Next: source ~/.bashrc && drip"
