@@ -118,3 +118,11 @@ DOTFILES_PUB_REPO=https://github.com/zrohyun/dotfiles-pub.git \
 DOTFILES_PUB_BRANCH=main \
 ./scripts/run_dotfiles_pub_single_clone.sh
 ```
+
+## Auth boundary smoke test
+
+Validate `drip` authentication guard rails (`gh missing`, `gh unauthenticated`, `gh user mismatch`):
+
+```bash
+./scripts/test_drip_auth_boundary.sh
+```

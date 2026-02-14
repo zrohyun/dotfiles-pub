@@ -1,0 +1,34 @@
+name: Drip Auth Boundary Test
+
+on:
+  push:
+    paths:
+      - "install.sh"
+      - "bashrc.template"
+      - "scripts/test_drip_auth_boundary.sh"
+      - ".github/workflows/drip-auth-boundary-test.yml"
+  pull_request:
+    paths:
+      - "install.sh"
+      - "bashrc.template"
+      - "scripts/test_drip_auth_boundary.sh"
+      - ".github/workflows/drip-auth-boundary-test.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: drip-auth-boundary-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  auth-boundary:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run auth boundary checks
+        run: |
+          chmod +x scripts/test_drip_auth_boundary.sh
+          ./scripts/test_drip_auth_boundary.sh

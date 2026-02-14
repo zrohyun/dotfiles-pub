@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$(uname -s)" != "Linux" ]]; then
+if [[ "${DOTFILES_PUB_ALLOW_NON_LINUX:-0}" != "1" && "$(uname -s)" != "Linux" ]]; then
   echo "[dotfiles-pub] Linux only installer. Current OS: $(uname -s)"
   exit 1
 fi
