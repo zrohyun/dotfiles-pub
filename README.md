@@ -97,6 +97,7 @@ These fallback methods are intentionally not auto-executed by this repo.
 
 ## TODO (private repo integration)
 
+- [x] `drip` auth boundary smoke test (`gh` missing/unauthenticated/user mismatch)
 - [ ] GitHub Actions E2E test for private repo clone/install via key/token
 - [ ] Local Docker tests covering private clone success/failure paths
 - [ ] Document secret injection policy (secret names, read-only scope, rotation)
