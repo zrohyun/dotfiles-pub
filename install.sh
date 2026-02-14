@@ -215,6 +215,13 @@ dotfiles_private_install() {
     cd "$dir"
     DOTFILES_INTERNAL_SOURCE=1 bash ./install.sh
   )
+
+  echo "[dotfiles-pub] private minimal install completed."
+  echo "[dotfiles-pub] next steps:"
+  echo "  cd \"$dir\""
+  echo "  make setup-core"
+  echo "  make setup-dev"
+  echo "  make setup-extra"
 }
 
 alias dpri='dotfiles_private_install'

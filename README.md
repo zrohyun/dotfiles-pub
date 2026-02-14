@@ -15,6 +15,10 @@ aboot
 aigh
 gh auth login
 drip
+cd ~/.dotfiles
+make setup-core
+make setup-dev
+make setup-extra
 ```
 
 ## What install.sh does
@@ -75,7 +79,8 @@ Default flow uses GitHub CLI:
 2. `gh auth login`
 3. Ensure the authenticated user matches `DOTFILES_EXPECTED_GH_USER`
 
-If checks pass, `drip` clones and runs the private `install.sh`.
+If checks pass, `drip` clones and runs the private `install.sh` (minimal only).
+Then continue staged setup from the private repo with `make setup-core`, `make setup-dev`, and `make setup-extra`.
 
 ## Fallback options (documentation only)
 
