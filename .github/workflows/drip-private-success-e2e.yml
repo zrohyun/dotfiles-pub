@@ -30,7 +30,6 @@ concurrency:
 
 jobs:
   private-success:
-    if: ${{ secrets.DOTFILES_PRIVATE_READ_TOKEN != '' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
@@ -49,16 +48,10 @@ jobs:
           DOTFILES_PRIVATE_REPO: ${{ github.event.inputs.private_repo || 'zrohyun/dotfiles' }}
           DOTFILES_PRIVATE_BRANCH: ${{ github.event.inputs.private_branch || 'main' }}
         run: |
+          if [[ -z "${DOTFILES_PRIVATE_READ_TOKEN:-}" ]]; then
+            echo "DOTFILES_PRIVATE_READ_TOKEN is not configured."
+            echo "Skipping private success E2E."
+            exit 0
+          fi
           chmod +x scripts/test_drip_private_success.sh
           ./scripts/test_drip_private_success.sh
-
-  no-secret:
-    if: ${{ secrets.DOTFILES_PRIVATE_READ_TOKEN == '' }}
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-    steps:
-      - name: Skip without secret
-        run: |
-          echo "DOTFILES_PRIVATE_READ_TOKEN is not configured."
-          echo "Skipping private success E2E."
