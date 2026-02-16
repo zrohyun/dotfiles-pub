@@ -1,0 +1,64 @@
+name: Drip Private Success E2E
+
+on:
+  push:
+    paths:
+      - "install.sh"
+      - "bashrc.template"
+      - "scripts/test_drip_private_success.sh"
+      - ".github/workflows/drip-private-success-e2e.yml"
+  pull_request:
+    paths:
+      - "install.sh"
+      - "bashrc.template"
+      - "scripts/test_drip_private_success.sh"
+      - ".github/workflows/drip-private-success-e2e.yml"
+  workflow_dispatch:
+    inputs:
+      private_repo:
+        description: "Private dotfiles repository (owner/repo)"
+        required: false
+        default: "zrohyun/dotfiles"
+      private_branch:
+        description: "Private dotfiles branch"
+        required: false
+        default: "main"
+
+concurrency:
+  group: drip-private-success-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  private-success:
+    if: ${{ secrets.DOTFILES_PRIVATE_READ_TOKEN != '' }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify gh CLI
+        run: gh --version
+
+      - name: Run private success E2E
+        env:
+          DOTFILES_PRIVATE_READ_TOKEN: ${{ secrets.DOTFILES_PRIVATE_READ_TOKEN }}
+          DOTFILES_PRIVATE_REPO: ${{ github.event.inputs.private_repo || 'zrohyun/dotfiles' }}
+          DOTFILES_PRIVATE_BRANCH: ${{ github.event.inputs.private_branch || 'main' }}
+        run: |
+          chmod +x scripts/test_drip_private_success.sh
+          ./scripts/test_drip_private_success.sh
+
+  no-secret:
+    if: ${{ secrets.DOTFILES_PRIVATE_READ_TOKEN == '' }}
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - name: Skip without secret
+        run: |
+          echo "DOTFILES_PRIVATE_READ_TOKEN is not configured."
+          echo "Skipping private success E2E."

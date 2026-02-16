@@ -2,6 +2,7 @@
 
 [![Build and Push Docker Image](https://github.com/zrohyun/dotfiles-pub/actions/workflows/docker-build.yml/badge.svg)](https://github.com/zrohyun/dotfiles-pub/actions/workflows/docker-build.yml)
 [![Install Test](https://github.com/zrohyun/dotfiles-pub/actions/workflows/install-test.yml/badge.svg)](https://github.com/zrohyun/dotfiles-pub/actions/workflows/install-test.yml)
+[![Drip Private Success E2E](https://github.com/zrohyun/dotfiles-pub/actions/workflows/drip-private-success-e2e.yml/badge.svg)](https://github.com/zrohyun/dotfiles-pub/actions/workflows/drip-private-success-e2e.yml)
 
 A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides a helper to install private dotfiles.
 
@@ -98,9 +99,9 @@ These fallback methods are intentionally not auto-executed by this repo.
 ## TODO (private repo integration)
 
 - [x] `drip` auth boundary smoke test (`gh` missing/unauthenticated/user mismatch)
-- [ ] GitHub Actions E2E test for private repo clone/install via key/token
+- [x] GitHub Actions E2E test for private repo clone/install via token
 - [ ] Local Docker tests covering private clone success/failure paths
-- [ ] Document secret injection policy (secret names, read-only scope, rotation)
+- [x] Document secret injection policy (secret names, read-only scope, rotation)
 - [ ] Test matrix separating `gh` auth and key/token auth paths
 
 ## Single-repo Docker test
@@ -126,4 +127,20 @@ Validate `drip` authentication guard rails (`gh missing`, `gh unauthenticated`, 
 
 ```bash
 ./scripts/test_drip_auth_boundary.sh
+```
+
+## Private success E2E (GitHub Actions)
+
+This E2E validates `gh auth` success path: `drip -> private clone -> private minimal install`.
+
+1. Add repository secret `DOTFILES_PRIVATE_READ_TOKEN` (read-only access to the private dotfiles repo).
+2. Run workflow `Drip Private Success E2E` (`workflow_dispatch`) with optional inputs:
+   - `private_repo` (default: `zrohyun/dotfiles`)
+   - `private_branch` (default: `main`)
+3. The workflow also listens on `push`/`pull_request` for installer/auth test path changes and auto-skips when the secret is not configured.
+
+Local run:
+
+```bash
+DOTFILES_PRIVATE_READ_TOKEN=*** ./scripts/test_drip_private_success.sh
 ```
