@@ -100,7 +100,7 @@ These fallback methods are intentionally not auto-executed by this repo.
 
 - [x] `drip` auth boundary smoke test (`gh` missing/unauthenticated/user mismatch)
 - [x] GitHub Actions E2E test for private repo clone/install via token
-- [ ] Local Docker tests covering private clone success/failure paths
+- [x] Local Docker tests covering private clone success/failure paths
 - [x] Document secret injection policy (secret names, read-only scope, rotation)
 - [ ] Test matrix separating `gh` auth and key/token auth paths
 
@@ -144,3 +144,19 @@ Local run:
 ```bash
 DOTFILES_PRIVATE_READ_TOKEN=*** ./scripts/test_drip_private_success.sh
 ```
+
+## Local Docker regression (failure + success)
+
+Run both failure and success paths in a fresh Ubuntu container:
+
+```bash
+DOTFILES_PRIVATE_READ_TOKEN=*** ./scripts/test_drip_regression_docker.sh
+```
+
+Options:
+
+- `IMAGE=ubuntu:24.04` (default image)
+- `DOTFILES_PRIVATE_REPO=zrohyun/dotfiles` (target private repo)
+- `DOTFILES_PRIVATE_BRANCH=main` (target branch)
+- `KEEP_CONTAINER=1` (keep container after run)
+- `REQUIRE_PRIVATE_SUCCESS=0` (allow running failure cases only when token is unavailable)
