@@ -76,7 +76,7 @@ export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-main}"
 export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 
 apt_install_basic_tools() {
-  local pkgs=(vim curl git sudo)
+  local pkgs=(vim curl git sudo make)
   local apt_env=(DEBIAN_FRONTEND=noninteractive)
   local tz="${DOTFILES_TZ:-${TZ:-Etc/UTC}}"
 
@@ -148,7 +148,7 @@ dotfiles_private_install() {
     else
       echo "  Ubuntu/Debian: aboot && aigh"
     fi
-    echo "  Or run: aboot to install vim curl git sudo"
+    echo "  Or run: aboot to install vim curl git sudo make"
     echo "  Then run: aigh and gh auth login"
     return 1
   fi
@@ -227,7 +227,7 @@ cat "$tmp_block" >> "$RC_FILE"
 rm -f "$tmp_block"
 
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
-echo "[dotfiles-pub] Tip: run 'aboot' in shell to install basic tools (vim/curl/git/sudo)"
+echo "[dotfiles-pub] Tip: run 'aboot' in shell to install basic tools (vim/curl/git/sudo/make)"
 echo "[dotfiles-pub] Tip: run 'aigh' in shell to install gh CLI"
 echo "[dotfiles-pub] Tip: run 'source ~/.bashrc && aboot && aigh' to install basic tools and gh CLI"
 # echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"

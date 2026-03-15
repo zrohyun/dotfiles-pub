@@ -56,6 +56,8 @@ For simplicity, this repo does not pin `install.sh` to a commit SHA or verify it
 
 `aboot` and `aigh` now run `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
 
+`aboot` installs `vim`, `curl`, `git`, `sudo`, and `make`.
+
 Default timezone fallback is `Etc/UTC`. Override it when needed:
 
 ```bash
