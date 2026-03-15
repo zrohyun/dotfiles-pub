@@ -77,16 +77,10 @@ export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 
 apt_install_basic_tools() {
   local pkgs=(vim curl git sudo)
-  local apt_env=()
-  local tz="${DOTFILES_TZ:-${TZ:-}}"
+  local apt_env=(DEBIAN_FRONTEND=noninteractive)
+  local tz="${DOTFILES_TZ:-${TZ:-Etc/UTC}}"
 
-  if [[ "${DOTFILES_AIBT_NONINTERACTIVE:-}" == "1" ]]; then
-    apt_env+=(DEBIAN_FRONTEND=noninteractive)
-  fi
-
-  if [[ -n "$tz" ]]; then
-    apt_env+=(TZ="$tz")
-  fi
+  apt_env+=(TZ="$tz")
 
   if ! command -v apt-get >/dev/null 2>&1; then
     echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
@@ -111,16 +105,10 @@ apt_install_basic_tools() {
 
 apt_install_gh() {
   local pkgs=(gh)
-  local apt_env=()
-  local tz="${DOTFILES_TZ:-${TZ:-}}"
+  local apt_env=(DEBIAN_FRONTEND=noninteractive)
+  local tz="${DOTFILES_TZ:-${TZ:-Etc/UTC}}"
 
-  if [[ "${DOTFILES_AIBT_NONINTERACTIVE:-}" == "1" ]]; then
-    apt_env+=(DEBIAN_FRONTEND=noninteractive)
-  fi
-
-  if [[ -n "$tz" ]]; then
-    apt_env+=(TZ="$tz")
-  fi
+  apt_env+=(TZ="$tz")
 
   if ! command -v apt-get >/dev/null 2>&1; then
     echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
@@ -241,5 +229,6 @@ rm -f "$tmp_block"
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
 echo "[dotfiles-pub] Tip: run 'aboot' in shell to install basic tools (vim/curl/git/sudo)"
 echo "[dotfiles-pub] Tip: run 'aigh' in shell to install gh CLI"
+echo "[dotfiles-pub] Tip: run 'source ~/.bashrc && aboot && aigh' to install basic tools and gh CLI"
 # echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
-echo "[dotfiles-pub] Next: source ~/.bashrc && drip"
+echo "[dotfiles-pub] Next: run 'bash' or 'source ~/.bashrc', then run 'drip'"

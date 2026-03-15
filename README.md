@@ -22,6 +22,17 @@ make setup-dev
 make setup-extra
 ```
 
+Remote install:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
+source ~/.bashrc
+aboot
+aigh
+gh auth login
+drip
+```
+
 ## What install.sh does
 
 - Linux only (exits on non-Linux hosts)
@@ -41,29 +52,15 @@ make setup-extra
 
 For simplicity, this repo does not pin `install.sh` to a commit SHA or verify its hash by default. It always fetches the latest `main` version.
 
-## tzdata prompts (aboot)
+## Noninteractive apt install
 
-`aboot` can trigger tzdata prompts on some Ubuntu/Debian hosts. Use one of the following to avoid interaction.
+`aboot` and `aigh` now run `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
 
-Method 1: One-shot install with noninteractive TZ.
-
-```bash
-sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get update
-sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Seoul apt-get install -y vim curl git sudo
-```
-
-Method 2: Preconfigure tzdata, then run `aboot`.
+Default timezone fallback is `Etc/UTC`. Override it when needed:
 
 ```bash
-sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-sudo dpkg-reconfigure -f noninteractive tzdata
-aboot
-```
-
-If you want `aboot` itself to run noninteractively, set the env vars below.
-
-```bash
-DOTFILES_AIBT_NONINTERACTIVE=1 DOTFILES_TZ=Asia/Seoul aboot
+DOTFILES_TZ=Asia/Seoul aboot
+DOTFILES_TZ=Asia/Seoul aigh
 ```
 
 ## gh install (aigh)
