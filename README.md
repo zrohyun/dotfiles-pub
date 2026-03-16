@@ -12,8 +12,7 @@ A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides
 cd submodules/dotfiles-pub
 ./install.sh
 source ~/.bashrc
-aboot
-aigh
+aiboot
 gh auth login
 drip
 cd ~/.dotfiles
@@ -27,8 +26,7 @@ Remote install:
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
 source ~/.bashrc
-aboot
-aigh
+aiboot
 gh auth login
 drip
 ```
@@ -54,21 +52,14 @@ For simplicity, this repo does not pin `install.sh` to a commit SHA or verify it
 
 ## Noninteractive apt install
 
-`aboot` and `aigh` now run `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
+`aiboot` runs `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
 
-`aboot` installs `vim`, `curl`, `git`, `sudo`, and `make`.
+`aiboot` installs `vim`, `curl`, `git`, `sudo`, `make`, and `gh`.
 
 Default timezone fallback is `Etc/UTC`. Override it when needed:
 
 ```bash
-DOTFILES_TZ=Asia/Seoul aboot
-DOTFILES_TZ=Asia/Seoul aigh
-```
-
-## gh install (aigh)
-
-```bash
-aigh
+DOTFILES_TZ=Asia/Seoul aiboot
 ```
 
 ## Auth policy
