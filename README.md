@@ -24,12 +24,14 @@ make setup-extra
 Remote install:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
+env bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
 source ~/.bashrc
 aiboot
 gh auth login
 drip
 ```
+
+The installer updates the current user's `~/.bashrc`. If you run it as `root`, it will modify `/root/.bashrc`.
 
 ## What install.sh does
 

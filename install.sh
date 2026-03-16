@@ -14,7 +14,10 @@ fi
 RC_FILE="${HOME}/.bashrc"
 MARKER_START="# DOTFILES_PUB_START"
 MARKER_END="# DOTFILES_PUB_END"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
 
 PUB_RAW_BASE="${DOTFILES_PUB_RAW_URL:-https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main}"
 TEMPLATE_URL="${PUB_RAW_BASE}/bashrc.template"
@@ -37,9 +40,13 @@ $0==e {skip=0; next}
 mv "$tmp_clean" "$RC_FILE"
 
 TEMPLATE_CONTENT=""
-LOCAL_TEMPLATE_PATH="${DOTFILES_PUB_TEMPLATE_PATH:-$SCRIPT_DIR/bashrc.template}"
+LOCAL_TEMPLATE_PATH="${DOTFILES_PUB_TEMPLATE_PATH:-}"
 
-if [[ -r "$LOCAL_TEMPLATE_PATH" ]]; then
+if [[ -z "$LOCAL_TEMPLATE_PATH" && -n "$SCRIPT_DIR" ]]; then
+  LOCAL_TEMPLATE_PATH="$SCRIPT_DIR/bashrc.template"
+fi
+
+if [[ -n "$LOCAL_TEMPLATE_PATH" && -r "$LOCAL_TEMPLATE_PATH" ]]; then
   echo "[dotfiles-pub] Using local template: $LOCAL_TEMPLATE_PATH"
   TEMPLATE_CONTENT="$(cat "$LOCAL_TEMPLATE_PATH" || true)"
 else
