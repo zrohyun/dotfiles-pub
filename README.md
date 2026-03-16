@@ -32,6 +32,7 @@ drip
 ```
 
 The installer updates the current user's `~/.bashrc`. If you run it as `root`, it will modify `/root/.bashrc`.
+Install logs are written under `${TMPDIR:-/tmp}` by default. Override with `DOTFILES_PUB_LOG_DIR=/path/to/logs`.
 
 ## What install.sh does
 

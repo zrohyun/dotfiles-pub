@@ -11,6 +11,17 @@ if [[ -z "${HOME:-}" ]]; then
   exit 1
 fi
 
+if [[ "${DOTFILES_PUB_LOGGING_INITIALIZED:-0}" != "1" ]]; then
+  tmp_base="${TMPDIR:-/tmp}"
+  log_root="${DOTFILES_PUB_LOG_DIR:-$(mktemp -d "${tmp_base%/}/dotfiles-pub-install.XXXXXX")}"
+  mkdir -p "$log_root"
+  export DOTFILES_PUB_LOGGING_INITIALIZED=1
+  export DOTFILES_PUB_LOG_DIR="$log_root"
+  export DOTFILES_PUB_LOG_FILE="${DOTFILES_PUB_LOG_FILE:-$log_root/install.log}"
+  exec > >(tee -a "$DOTFILES_PUB_LOG_FILE") 2>&1
+  echo "[dotfiles-pub] log: $DOTFILES_PUB_LOG_FILE"
+fi
+
 RC_FILE="${HOME}/.bashrc"
 MARKER_START="# DOTFILES_PUB_START"
 MARKER_END="# DOTFILES_PUB_END"
