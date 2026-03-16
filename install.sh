@@ -1,6 +1,50 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+show_help() {
+  cat <<'EOF'
+Usage: install.sh [options]
+
+Options:
+  --auto-aiboot  Run apt bootstrap automatically after install (default)
+  --no-aiboot    Skip automatic apt bootstrap
+  --help         Show this help message
+EOF
+}
+
+AUTO_AIBOOT="${DOTFILES_PUB_AUTO_AIBOOT:-1}"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --auto-aiboot)
+      AUTO_AIBOOT=1
+      shift
+      ;;
+    --no-aiboot)
+      AUTO_AIBOOT=0
+      shift
+      ;;
+    --help)
+      show_help
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "[dotfiles-pub] unknown option: $1" >&2
+      show_help >&2
+      exit 2
+      ;;
+    *)
+      echo "[dotfiles-pub] unexpected argument: $1" >&2
+      show_help >&2
+      exit 2
+      ;;
+  esac
+done
+
 if [[ "${DOTFILES_PUB_ALLOW_NON_LINUX:-0}" != "1" && "$(uname -s)" != "Linux" ]]; then
   echo "[dotfiles-pub] Linux only installer. Current OS: $(uname -s)"
   exit 1
@@ -32,6 +76,40 @@ fi
 
 PUB_RAW_BASE="${DOTFILES_PUB_RAW_URL:-https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main}"
 TEMPLATE_URL="${PUB_RAW_BASE}/bashrc.template"
+
+apt_install_packages() {
+  local command_name="$1"
+  shift
+  local pkgs=("$@")
+  local apt_env=(DEBIAN_FRONTEND=noninteractive)
+  local tz="${DOTFILES_TZ:-${TZ:-Etc/UTC}}"
+
+  apt_env+=(TZ="$tz")
+
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
+    return 1
+  fi
+
+  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    env "${apt_env[@]}" apt-get update
+    env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
+    return 0
+  fi
+
+  if command -v sudo >/dev/null 2>&1; then
+    sudo env "${apt_env[@]}" apt-get update
+    sudo env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
+    return 0
+  fi
+
+  echo "[dotfiles-pub] sudo is required to run ${command_name} on non-root users."
+  return 1
+}
+
+apt_install_bootstrap() {
+  apt_install_packages aiboot vim curl git sudo make gh
+}
 
 mkdir -p "${HOME}"
 touch "$RC_FILE"
@@ -92,41 +170,11 @@ export DOTFILES_PRIVATE_REPO="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
 export DOTFILES_PRIVATE_DIR="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
 export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-main}"
 export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
-
-apt_install_packages() {
-  local command_name="$1"
-  shift
-  local pkgs=("$@")
-  local apt_env=(DEBIAN_FRONTEND=noninteractive)
-  local tz="${DOTFILES_TZ:-${TZ:-Etc/UTC}}"
-
-  apt_env+=(TZ="$tz")
-
-  if ! command -v apt-get >/dev/null 2>&1; then
-    echo "[dotfiles-pub] apt-get is not available. This function is for Ubuntu/Debian only."
-    return 1
-  fi
-
-  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
-    env "${apt_env[@]}" apt-get update
-    env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
-    return 0
-  fi
-
-  if command -v sudo >/dev/null 2>&1; then
-    sudo env "${apt_env[@]}" apt-get update
-    sudo env "${apt_env[@]}" apt-get install -y "${pkgs[@]}"
-    return 0
-  fi
-
-  echo "[dotfiles-pub] sudo is required to run ${command_name} on non-root users."
-  return 1
-}
-
-apt_install_bootstrap() {
-  apt_install_packages aiboot vim curl git sudo make gh
-}
-
+BLOCK
+  declare -f apt_install_packages
+  echo
+  declare -f apt_install_bootstrap
+  cat <<'BLOCK'
 alias aiboot='apt_install_bootstrap'
 
 dotfiles_private_install() {
@@ -222,7 +270,15 @@ cat "$tmp_block" >> "$RC_FILE"
 rm -f "$tmp_block"
 
 echo "[dotfiles-pub] Installed bootstrap block into $RC_FILE"
-echo "[dotfiles-pub] Tip: run 'aiboot' in shell to install vim/curl/git/sudo/make/gh"
-echo "[dotfiles-pub] Tip: run 'source ~/.bashrc && aiboot' after install to bootstrap apt packages"
+if [[ "$AUTO_AIBOOT" == "1" ]]; then
+  echo "[dotfiles-pub] Running automatic bootstrap: aiboot"
+  if ! apt_install_bootstrap; then
+    echo "[dotfiles-pub] Tip: automatic aiboot failed. Run 'aiboot' manually after fixing apt/sudo access."
+  fi
+else
+  echo "[dotfiles-pub] Tip: automatic aiboot is disabled. Run 'source ~/.bashrc && aiboot' to bootstrap apt packages."
+fi
+echo "[dotfiles-pub] Tip: disable auto bootstrap with 'DOTFILES_PUB_AUTO_AIBOOT=0 bash -c \"\$(curl -fsSL $PUB_RAW_BASE/install.sh)\"'"
+echo "[dotfiles-pub] Tip: or use 'curl -fsSL $PUB_RAW_BASE/install.sh | bash -s -- --no-aiboot'"
 # echo "[dotfiles-pub] Next: source ~/.bashrc && dpri"
 echo "[dotfiles-pub] Next: run 'bash' or 'source ~/.bashrc', then run 'drip'"

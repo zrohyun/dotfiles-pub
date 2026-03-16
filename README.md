@@ -12,7 +12,6 @@ A minimal Linux bootstrap that installs a managed `~/.bashrc` block and provides
 cd submodules/dotfiles-pub
 ./install.sh
 source ~/.bashrc
-aiboot
 gh auth login
 drip
 cd ~/.dotfiles
@@ -26,13 +25,13 @@ Remote install:
 ```bash
 env bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
 source ~/.bashrc
-aiboot
 gh auth login
 drip
 ```
 
 The installer updates the current user's `~/.bashrc`. If you run it as `root`, it will modify `/root/.bashrc`.
 Install logs are written under `${TMPDIR:-/tmp}` by default. Override with `DOTFILES_PUB_LOG_DIR=/path/to/logs`.
+By default, the installer also runs `aiboot` automatically. To skip that behavior, prefer `DOTFILES_PUB_AUTO_AIBOOT=0`.
 
 ## What install.sh does
 
@@ -48,6 +47,27 @@ Install logs are written under `${TMPDIR:-/tmp}` by default. Override with `DOTF
 - `DOTFILES_PRIVATE_DIR` (default: `~/.dotfiles`)
 - `DOTFILES_PRIVATE_BRANCH` (default: `main`)
 - `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
+- `DOTFILES_PUB_AUTO_AIBOOT` (default: `1`)
+- `DOTFILES_PUB_LOG_DIR` (default: `${TMPDIR:-/tmp}/dotfiles-pub-install.XXXXXX`)
+- `DOTFILES_PUB_LOG_FILE` (default: `$DOTFILES_PUB_LOG_DIR/install.log`)
+
+## Install options
+
+- `--auto-aiboot` runs apt bootstrap automatically after install (default)
+- `--no-aiboot` skips automatic apt bootstrap
+- `--help` prints usage
+
+Recommended way to skip automatic apt bootstrap:
+
+```bash
+DOTFILES_PUB_AUTO_AIBOOT=0 env bash -c "$(curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh)"
+```
+
+You can also pass an explicit installer option:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/zrohyun/dotfiles-pub/main/install.sh | bash -s -- --no-aiboot
+```
 
 ## Install policy (simplified)
 
@@ -55,7 +75,7 @@ For simplicity, this repo does not pin `install.sh` to a commit SHA or verify it
 
 ## Noninteractive apt install
 
-`aiboot` runs `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
+Automatic `aiboot` and manual `aiboot` both run `apt-get` with `DEBIAN_FRONTEND=noninteractive` by default, so tzdata location prompts should not appear during install.
 
 `aiboot` installs `vim`, `curl`, `git`, `sudo`, `make`, and `gh`.
 
