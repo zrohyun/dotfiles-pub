@@ -168,7 +168,10 @@ tmp_block="$(mktemp)"
 # Private dotfiles bootstrap (defaults can be overridden before calling dpri)
 export DOTFILES_PRIVATE_REPO="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
 export DOTFILES_PRIVATE_DIR="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
-export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-main}"
+# 배포 채널. private 저장소는 main(통합) / stable(검증 후 승급) 두 채널을 쓴다.
+# 기본을 stable 로 두어, 머신은 승급된 것만 받는다. 주 작업 머신처럼 edge 를
+# 따라가려면 이 블록보다 먼저 DOTFILES_PRIVATE_BRANCH=main 을 export 한다.
+export DOTFILES_PRIVATE_BRANCH="${DOTFILES_PRIVATE_BRANCH:-stable}"
 export DOTFILES_EXPECTED_GH_USER="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
 BLOCK
   declare -f apt_install_packages
@@ -180,7 +183,7 @@ alias aiboot='apt_install_bootstrap'
 dotfiles_private_install() {
   local repo="${DOTFILES_PRIVATE_REPO:-zrohyun/dotfiles}"
   local dir="${DOTFILES_PRIVATE_DIR:-$HOME/.dotfiles}"
-  local branch="${DOTFILES_PRIVATE_BRANCH:-main}"
+  local branch="${DOTFILES_PRIVATE_BRANCH:-stable}"
   local expected_user="${DOTFILES_EXPECTED_GH_USER:-zrohyun}"
   local current_user remote_url backup_dir
 

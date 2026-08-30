@@ -45,7 +45,8 @@ By default, the installer also runs `aiboot` automatically. To skip that behavio
 
 - `DOTFILES_PRIVATE_REPO` (default: `zrohyun/dotfiles`)
 - `DOTFILES_PRIVATE_DIR` (default: `~/.dotfiles`)
-- `DOTFILES_PRIVATE_BRANCH` (default: `main`)
+- `DOTFILES_PRIVATE_BRANCH` (default: `stable`) — private 저장소의 배포 채널.
+  `main` 으로 두면 통합 브랜치(edge)를 받는다.
 - `DOTFILES_EXPECTED_GH_USER` (default: `zrohyun`)
 - `DOTFILES_PUB_AUTO_AIBOOT` (default: `1`)
 - `DOTFILES_PUB_LOG_DIR` (default: `${TMPDIR:-/tmp}/dotfiles-pub-install.XXXXXX`)
@@ -170,6 +171,6 @@ Options:
 
 - `IMAGE=ubuntu:24.04` (default image)
 - `DOTFILES_PRIVATE_REPO=zrohyun/dotfiles` (target private repo)
-- `DOTFILES_PRIVATE_BRANCH=main` (target branch)
+- `DOTFILES_PRIVATE_BRANCH=stable` (target branch; `main` 은 edge)
 - `KEEP_CONTAINER=1` (keep container after run)
 - `REQUIRE_PRIVATE_SUCCESS=0` (allow running failure cases only when token is unavailable)
